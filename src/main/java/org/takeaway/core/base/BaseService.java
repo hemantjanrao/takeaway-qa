@@ -4,15 +4,11 @@ import com.google.common.collect.ImmutableMap;
 import io.restassured.http.Method;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
-
 import java.util.Map;
 
 public abstract class BaseService {
 
     protected String rootURL;
-    protected static final Logger log = LogManager.getLogger(BaseService.class);
 
     /**
      * Used to define the RequestSpecification common to all operations
@@ -71,10 +67,8 @@ public abstract class BaseService {
         return getRequestSpec()
                 .when()
                 .body(body)
-                .log().all()
                 .request(method, url)
                 .then()
-                .log().all()
                 .extract().response();
     }
 }

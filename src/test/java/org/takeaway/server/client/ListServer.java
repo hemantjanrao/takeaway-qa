@@ -23,7 +23,7 @@ public class ListServer extends AbstractService {
     }
 
     public Response getList(int listId) {
-        log.info("Getting the list");
+        log.info(String.format("Getting list with id: %d", listId));
         return getRequest(LIST_URL + "/" + listId);
     }
 
@@ -34,6 +34,7 @@ public class ListServer extends AbstractService {
      * @return Response
      */
     public Response createList(ListModel list) {
+        log.info(String.format("Creating list: %s", list));
         return postRequest(LIST_URL, list);
     }
 
@@ -44,6 +45,7 @@ public class ListServer extends AbstractService {
      * @return Response
      */
     public Response deleteList(int listId) {
+        log.info(String.format("Deleting list with Id: %d", listId));
         return deleteRequest(LIST_URL + "/" + listId);
     }
 
@@ -55,50 +57,54 @@ public class ListServer extends AbstractService {
      * @return Response
      */
     public Response updateList(int listId, UpdateListModel updatedList) {
+        log.info(String.format("Updating list with Id: %d and payload:%s", listId, updatedList));
         return updateRequest(LIST_URL + "/" + listId, updatedList);
     }
 
     /**
      * Method to add item to the list
      *
-     * @param listId      int
+     * @param listId   int
      * @param itemList ItemsModel
      * @return Response
      */
     public Response addItemToList(int listId, ItemsModel itemList) {
-        return postRequest(LIST_URL + "/" + listId+"/items", itemList);
+        log.info(String.format("Adding items: %s to list with Id:%s", itemList, listId));
+        return postRequest(LIST_URL + "/" + listId + "/items", itemList);
     }
 
     /**
      * Method to update item to the list
      *
-     * @param listId      int
+     * @param listId   int
      * @param itemList ItemsModel
      * @return Response
      */
     public Response updateItemFromList(int listId, ItemsModel itemList) {
-        return updateRequest(LIST_URL + "/" + listId+"/items?language=en-US", itemList);
+        log.info(String.format("Updating items: %s to list with Id:%s", itemList, listId));
+        return updateRequest(LIST_URL + "/" + listId + "/items", itemList);
     }
 
     /**
      * Method to update item to the list
      *
-     * @param listId      int
+     * @param listId   int
      * @param itemList ItemsModel
      * @return Response
      */
     public Response deleteItemFromList(int listId, ItemsModel itemList) {
-        return deleteRequest(LIST_URL + "/" + listId+"/items", itemList);
+        log.info(String.format("Deleting items: %s from list with Id:%s", itemList, listId));
+        return deleteRequest(LIST_URL + "/" + listId + "/items", itemList);
     }
 
     /**
      * To create Media
      *
-     * @param mediaId int
+     * @param mediaId   int
      * @param mediaType String
      * @return MediaModel
      */
-    public MediaModel createMedia(int mediaId, String mediaType, String comment){
+    public MediaModel createMedia(int mediaId, String mediaType, String comment) {
         MediaModel media = new MediaModel();
 
         media.setMedia_id(mediaId);

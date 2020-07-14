@@ -1,10 +1,9 @@
 package org.takeaway.test;
 
-import com.aventstack.extentreports.testng.listener.ExtentIReporterSuiteListenerAdapter;
-import com.aventstack.extentreports.testng.listener.ExtentITestListenerClassAdapter;
 import io.restassured.response.Response;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.http.HttpStatus;
+import org.takeaway.core.base.BaseTest;
 import org.takeaway.core.helper.TestHelper;
 import org.takeaway.core.util.Environment;
 import org.takeaway.core.util.PropertyUtils;
@@ -13,7 +12,7 @@ import org.takeaway.server.entity.model.ItemsModel;
 import org.takeaway.server.entity.model.ListModel;
 import org.takeaway.server.entity.model.MediaModel;
 import org.takeaway.server.entity.model.UpdateListModel;
-import org.takeaway.server.entity.response.FetchList;
+import org.takeaway.server.entity.response.GetList;
 import org.takeaway.server.entity.response.ListResponse;
 import org.testng.Assert;
 import org.testng.annotations.*;
@@ -21,8 +20,7 @@ import org.testng.annotations.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@Listeners({ExtentITestListenerClassAdapter.class})
-public class ListTests {
+public class ListTests extends BaseTest {
 
     private ListServer listServer;
     private ListResponse listResponse;
@@ -35,7 +33,7 @@ public class ListTests {
     }
 
     @BeforeMethod
-    public void setUp() {
+    public void beforeMethod() {
         ListModel list = new ListModel();
 
         list.setName(RandomStringUtils.randomAlphabetic(10));
@@ -45,6 +43,9 @@ public class ListTests {
         Assert.assertEquals(createdList.statusCode(), HttpStatus.SC_CREATED);
 
         listResponse = TestHelper.deserializeJson(createdList, ListResponse.class);
+
+        Assert.assertEquals(listResponse.getStatus_message(), "The item/record was created successfully.",
+                String.format("List creation with name: %s failed", list.getName()));
     }
 
     @AfterMethod
@@ -55,8 +56,6 @@ public class ListTests {
     @Test
     public void createList() {
         Assert.assertEquals(listResponse.getStatus_message(), "The item/record was created successfully.");
-
-        listServer.deleteList(listResponse.getId());
     }
 
     @Test
@@ -70,7 +69,7 @@ public class ListTests {
         Assert.assertEquals(updatedList.statusCode(), HttpStatus.SC_CREATED);
 
         Response list1 = listServer.getList(listResponse.getId());
-        FetchList listResponse1 = TestHelper.deserializeJson(list1, FetchList.class);
+        GetList listResponse1 = TestHelper.deserializeJson(list1, GetList.class);
 
         Assert.assertEquals(listResponse1.getDescription(), "Updated description");
         Assert.assertEquals(listResponse1.getName(), "Updated name");
@@ -150,7 +149,7 @@ public class ListTests {
         Assert.assertEquals(response.statusCode(), HttpStatus.SC_OK);
 
         Response list1 = listServer.getList(listResponse.getId());
-        FetchList listResponse1 = TestHelper.deserializeJson(list1, FetchList.class);
+        GetList listResponse1 = TestHelper.deserializeJson(list1, GetList.class);
 
         Assert.assertEquals(listResponse1.getResults().size(), 1);
         Assert.assertEquals(listResponse1.getResults().get(0).getId(), friends.getMedia_id());

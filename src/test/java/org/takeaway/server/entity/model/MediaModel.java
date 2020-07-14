@@ -3,7 +3,7 @@ package org.takeaway.server.entity.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class MediaModel{
+public class MediaModel {
     @Expose
     @SerializedName("media_type")
     private String media_type;
