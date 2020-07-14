@@ -43,7 +43,7 @@ public abstract class AbstractService extends BaseService {
                 .contentType("application/json")
                 .accept("*/*")
                 .header("Authorization", "Bearer " + PropertyUtils.get(Environment.WRITE_ACCESS_TOKEN))
-                .accept("application/json");
+                .accept("*/*");
     }
 
     private String getRequestToken() {
@@ -160,6 +160,26 @@ public abstract class AbstractService extends BaseService {
      * @return Response
      */
     protected Response updateRequest(String url, Object body) {
-        return request(Method.PATCH, body, url);
+        return request(Method.PUT, body, url);
+    }
+
+    /**
+     * Delete request
+     *
+     * @param url  URL
+     * @return Response
+     */
+    protected Response deleteRequest(String url) {
+        return request(Method.DELETE, url);
+    }
+
+    /**
+     * Delete request
+     *
+     * @param url  URL
+     * @return Response
+     */
+    protected Response deleteRequest(String url, Object body) {
+        return request(Method.DELETE, body,url);
     }
 }

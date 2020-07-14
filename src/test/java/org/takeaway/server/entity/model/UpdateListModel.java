@@ -7,15 +7,15 @@ public class UpdateListModel {
 
     @Expose
     @SerializedName("description")
-    public String description;
+    private String description;
 
     @Expose
     @SerializedName("name")
-    public String name;
+    private String name;
 
     @Expose
     @SerializedName("sort_by")
-    public String sort_by ;
+    private String sort_by ;
 
     public String getDescription() {
         return description;

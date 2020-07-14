@@ -71,8 +71,10 @@ public abstract class BaseService {
         return getRequestSpec()
                 .when()
                 .body(body)
+                .log().all()
                 .request(method, url)
                 .then()
+                .log().all()
                 .extract().response();
     }
 }

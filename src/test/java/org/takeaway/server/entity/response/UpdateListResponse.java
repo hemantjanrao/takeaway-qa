@@ -17,4 +17,15 @@ public class UpdateListResponse {
     @SerializedName("status_code")
     public int status_code;
 
+    public String getStatus_message() {
+        return status_message;
+    }
+
+    public boolean isSuccess() {
+        return success;
+    }
+
+    public int getStatus_code() {
+        return status_code;
+    }
 }
