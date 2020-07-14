@@ -4,7 +4,8 @@ public enum Environment {
     API_URL("api.base.url"),
     API_PROTOCOL("api.protocol"),
     API_VERSION("api.version"),
-    ACCESS_TOKEN("api.read.access.token");
+    ACCESS_TOKEN("api.read.access.token"),
+    WRITE_ACCESS_TOKEN("api.write.access.token");
 
     private final String key;
 
