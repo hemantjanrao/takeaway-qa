@@ -1,0 +1,15 @@
+language: java
+jdk:
+  - oraclejdk11
+
+sudo: false
+dist: trusty
+
+install: true
+
+cache:
+  directories:
+    - $HOME/.m2
+
+script:
+  - mvn clean test

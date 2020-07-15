@@ -1,5 +1,5 @@
 # Automation Suite
-
+[![Build Status](https://travis-ci.org/hemantjanrao/takeaway-qa.svg?branch=master)](https://travis-ci.org/hemantjanrao/takeaway-qa)
 ## Summary
 
 Framework is build using the stack
@@ -8,6 +8,8 @@ Framework is build using the stack
 * [TestNG](https://testng.org/doc/)
 * [Extent Reporting](https://extentreports.com/)
 * [Lombok](https://projectlombok.org/)
+
+Also, you can check all the dependencies on https://github.com/hemantjanrao/takeaway-qa/network/dependencies
 <br>
 
 ## Project Pre-Installation
