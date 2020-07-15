@@ -2,7 +2,11 @@ package org.takeaway.server.entity.response;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 public class UpdateListResponse {
 
     @Expose
@@ -16,16 +20,4 @@ public class UpdateListResponse {
     @Expose
     @SerializedName("status_code")
     public int status_code;
-
-    public String getStatus_message() {
-        return status_message;
-    }
-
-    public boolean isSuccess() {
-        return success;
-    }
-
-    public int getStatus_code() {
-        return status_code;
-    }
 }

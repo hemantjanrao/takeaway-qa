@@ -2,7 +2,11 @@ package org.takeaway.server.entity.response;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 public class ListResponse {
 
     @Expose
@@ -24,17 +28,4 @@ public class ListResponse {
     public String getStatus_message() {
         return status_message;
     }
-
-    public int getId() {
-        return id;
-    }
-
-    public boolean isSuccess() {
-        return success;
-    }
-
-    public int getStatus_code() {
-        return status_code;
-    }
-    
 }

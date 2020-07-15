@@ -8,14 +8,9 @@ import org.json.JSONObject;
 
 public class TestHelper {
 
-    public static JsonObject getJsonFromResponse(Response res) {
+    private static JsonObject getJsonFromResponse(Response res) {
         Gson gson = new Gson();
         return gson.fromJson(new JSONObject(res.getBody().asString()).toString(), JsonObject.class);
-    }
-
-    public static <T> T deserializeJson(JsonObject json, Class<T> requiredClass) {
-        Gson gson = new Gson();
-        return (T)gson.fromJson(json, requiredClass);
     }
 
     public static <T> T deserializeJson(Response res, Class<T> requiredClass) {

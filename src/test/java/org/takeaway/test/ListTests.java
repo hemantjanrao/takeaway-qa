@@ -41,7 +41,7 @@ public class ListTests extends BaseTest {
         list.setName(RandomStringUtils.randomAlphabetic(10));
         list.setIso_639_1("en");
 
-        Response createdList = listServer.createList(list);
+        Response createdList = listServer.createList(TestHelper.serializeToJson(list));
         Assert.assertEquals(createdList.statusCode(), HttpStatus.SC_CREATED);
 
         this.createdList = TestHelper.deserializeJson(createdList, ListResponse.class);
@@ -72,7 +72,7 @@ public class ListTests extends BaseTest {
         updateList.setDescription("Updated description");
         updateList.setName("Updated name");
 
-        Response updatedList = listServer.updateList(createdList.getId(), updateList);
+        Response updatedList = listServer.updateList(createdList.getId(), TestHelper.serializeToJson(updateList));
         Assert.assertEquals(updatedList.statusCode(), HttpStatus.SC_CREATED);
 
         Response list1 = listServer.getList(createdList.getId());
@@ -90,7 +90,7 @@ public class ListTests extends BaseTest {
         listServer.setMedia(597, "movie", null);
         items.setItems(listServer.getItems());
 
-        Response response = listServer.addItemToList(createdList.getId(), items);
+        Response response = listServer.addItemToList(createdList.getId(), TestHelper.serializeToJson(items));
         Assert.assertEquals(response.statusCode(), HttpStatus.SC_OK);
     }
 
@@ -102,7 +102,7 @@ public class ListTests extends BaseTest {
         listServer.setMedia(597, "movie", null);
         items.setItems(listServer.getItems());
 
-        Response response1 = listServer.addItemToList(createdList.getId(), items);
+        Response response1 = listServer.addItemToList(createdList.getId(), TestHelper.serializeToJson(items));
         Assert.assertEquals(response1.statusCode(), HttpStatus.SC_OK);
 
         ItemsModel itemsToBeUpdated = new ItemsModel();
@@ -110,7 +110,7 @@ public class ListTests extends BaseTest {
         listServer.setMedia(490132, "movie", "NO comment");
         itemsToBeUpdated.setItems(listServer.getItems());
 
-        Response response = listServer.updateItemFromList(createdList.getId(), itemsToBeUpdated);
+        Response response = listServer.updateItemFromList(createdList.getId(), TestHelper.serializeToJson(itemsToBeUpdated));
 
         Assert.assertEquals(response.statusCode(), HttpStatus.SC_OK);
     }
@@ -123,14 +123,14 @@ public class ListTests extends BaseTest {
         listServer.setMedia(597, "movie", null);
         items.setItems(listServer.getItems());
 
-        Response response1 = listServer.addItemToList(createdList.getId(), items);
+        Response response1 = listServer.addItemToList(createdList.getId(), TestHelper.serializeToJson(items));
         Assert.assertEquals(response1.statusCode(), HttpStatus.SC_OK);
 
         ItemsModel itemsToBeDeleted = new ItemsModel();
         listServer.setMedia(597, "movie", null);
         itemsToBeDeleted.setItems(listServer.getItems());
 
-        Response response = listServer.deleteItemFromList(createdList.getId(), itemsToBeDeleted);
+        Response response = listServer.deleteItemFromList(createdList.getId(), TestHelper.serializeToJson(itemsToBeDeleted));
         Assert.assertEquals(response.statusCode(), HttpStatus.SC_OK);
 
         Response list1 = listServer.getList(createdList.getId());
@@ -149,7 +149,7 @@ public class ListTests extends BaseTest {
         listServer.setMedia(597, "movie", null);
         items.setItems(listServer.getItems());
 
-        Response response = listServer.addItemToList(createdList.getId(), items);
+        Response response = listServer.addItemToList(createdList.getId(), TestHelper.serializeToJson(items));
         Assert.assertEquals(response.statusCode(), HttpStatus.SC_OK);
 
         AddItemResponse addItemResponse = TestHelper.deserializeJson(response, AddItemResponse.class);

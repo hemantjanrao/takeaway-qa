@@ -2,10 +2,7 @@ package org.takeaway.server.client;
 
 import io.restassured.response.Response;
 import org.takeaway.core.base.AbstractService;
-import org.takeaway.server.entity.model.ItemsModel;
-import org.takeaway.server.entity.model.ListModel;
 import org.takeaway.server.entity.model.MediaModel;
-import org.takeaway.server.entity.model.UpdateListModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +12,6 @@ public class ListServer extends AbstractService {
     private static final String LIST_URL = "/list";
 
     private static final List<MediaModel> mediaList = new ArrayList<>();
-    ;
 
     /**
      * Constructor
@@ -42,7 +38,7 @@ public class ListServer extends AbstractService {
      * @param list ListModel
      * @return Response
      */
-    public Response createList(ListModel list) {
+    public Response createList(String list) {
         return postRequest(LIST_URL, list);
     }
 
@@ -63,7 +59,7 @@ public class ListServer extends AbstractService {
      * @param updatedList UpdateListModel
      * @return Response
      */
-    public Response updateList(int listId, UpdateListModel updatedList) {
+    public Response updateList(int listId, String updatedList) {
         return updateRequest(LIST_URL + "/" + listId, updatedList);
     }
 
@@ -74,7 +70,7 @@ public class ListServer extends AbstractService {
      * @param itemList ItemsModel
      * @return Response
      */
-    public Response addItemToList(int listId, ItemsModel itemList) {
+    public Response addItemToList(int listId, String itemList) {
         Response response = postRequest(LIST_URL + "/" + listId + "/items", itemList);
         getItems().clear();
         return response;
@@ -87,8 +83,10 @@ public class ListServer extends AbstractService {
      * @param itemList ItemsModel
      * @return Response
      */
-    public Response updateItemFromList(int listId, ItemsModel itemList) {
-        return updateRequest(LIST_URL + "/" + listId + "/items", itemList);
+    public Response updateItemFromList(int listId, String itemList) {
+        Response response = updateRequest(LIST_URL + "/" + listId + "/items", itemList);
+        getItems().clear();
+        return response;
     }
 
     /**
@@ -98,16 +96,18 @@ public class ListServer extends AbstractService {
      * @param itemList ItemsModel
      * @return Response
      */
-    public Response deleteItemFromList(int listId, ItemsModel itemList) {
-        return deleteRequest(LIST_URL + "/" + listId + "/items", itemList);
+    public Response deleteItemFromList(int listId, String itemList) {
+        Response response = deleteRequest(LIST_URL + "/" + listId + "/items", itemList);
+        getItems().clear();
+        return response;
     }
 
     /**
      * Method to set media
      *
-     * @param mediaId int
+     * @param mediaId   int
      * @param mediaType String
-     * @param comment String
+     * @param comment   String
      */
     public void setMedia(int mediaId, String mediaType, String comment) {
         MediaModel media = new MediaModel();

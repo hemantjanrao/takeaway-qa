@@ -29,25 +29,20 @@ public class BaseTest {
     public void baseBeforeTest() {
         log.info("Test started");
 
-        // initialize the ExtentSparkReporter
         spark = new ExtentSparkReporter(System.getProperty("user.dir") + "/test-output/testReport.html");
         spark.loadConfig("src/test/resources/html-config.xml");
 
-        //initialize ExtentReports and attach the ExtentSparkReporter
         extent = new ExtentReports();
         extent.attachReporter(spark);
 
-        //To add system or environment info by using the setSystemInfo method.
         extent.setSystemInfo("OS", System.getProperty("os.name"));
         extent.setSystemInfo("User ", System.getProperty("user.name"));
         extent.setSystemInfo("Java Version", String.valueOf(Runtime.version()));
-
     }
 
     @AfterTest
     public void tearDown() {
         log.info("Test finished");
-        //to write or update test information to reporter
         extent.flush();
     }
 
