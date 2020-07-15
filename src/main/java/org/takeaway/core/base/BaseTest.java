@@ -18,7 +18,7 @@ public class BaseTest {
 
     protected ExtentSparkReporter spark;
     protected ExtentReports extent;
-    protected ExtentTest test;
+    public ExtentTest test;
 
     @BeforeClass(alwaysRun = true)
     public void baseTestBeforeClass() {

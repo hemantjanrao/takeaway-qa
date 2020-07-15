@@ -5,21 +5,18 @@ import com.google.gson.annotations.SerializedName;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.List;
-
 @Getter
 @Setter
-public class GetList {
+public class Media {
+    @Expose
+    @SerializedName("media_type")
+    public String media_type;
 
     @Expose
-    @SerializedName("name")
-    public String name;
+    @SerializedName("media_id")
+    public int media_id;
 
     @Expose
-    @SerializedName("description")
-    public String description;
-
-    @Expose
-    @SerializedName("results")
-    public List<MediaResponse> results;
+    @SerializedName("success")
+    public boolean success;
 }

@@ -9,19 +9,17 @@ import java.util.List;
 
 @Getter
 @Setter
-public class AddItemResponse {
+public class GetListResponse {
 
     @Expose
-    @SerializedName("success")
-    public boolean success;
+    @SerializedName("name")
+    public String name;
 
     @Expose
-    @SerializedName("status_code")
-    public int status_code;
+    @SerializedName("description")
+    public String description;
 
     @Expose
     @SerializedName("results")
-    public List<Media> results;
+    public List<MediaResponse> results;
 }
-
-

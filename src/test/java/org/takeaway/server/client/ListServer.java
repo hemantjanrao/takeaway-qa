@@ -11,7 +11,7 @@ public class ListServer extends AbstractService {
 
     private static final String LIST_URL = "/list";
 
-    private static final List<MediaModel> mediaList = new ArrayList<>();
+    private final List<MediaModel> mediaList = new ArrayList<>();
 
     /**
      * Constructor
@@ -102,22 +102,7 @@ public class ListServer extends AbstractService {
         return response;
     }
 
-    /**
-     * Method to set media
-     *
-     * @param mediaId   int
-     * @param mediaType String
-     * @param comment   String
-     */
-    public void setMedia(int mediaId, String mediaType, String comment) {
-        MediaModel media = new MediaModel();
 
-        media.setMedia_id(mediaId);
-        media.setMedia_type(mediaType);
-        media.setComment(comment);
-
-        mediaList.add(media);
-    }
 
     /**
      * Method to get list of items
