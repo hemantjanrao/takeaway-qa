@@ -7,17 +7,17 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class UpdateListModel {
-
-    @Expose
-    @SerializedName("description")
-    private String description;
+public class List {
 
     @Expose
     @SerializedName("name")
     private String name;
 
     @Expose
-    @SerializedName("sort_by")
-    private String sort_by ;
+    @SerializedName("iso_639_1")
+    private String iso_639_1;
+
+    @Expose
+    @SerializedName("description")
+    private String description;
 }

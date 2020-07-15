@@ -2,7 +2,7 @@ package org.takeaway.server.client;
 
 import io.restassured.response.Response;
 import org.takeaway.core.base.AbstractService;
-import org.takeaway.server.entity.model.MediaModel;
+import org.takeaway.server.entity.model.Media;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +11,7 @@ public class ListServer extends AbstractService {
 
     private static final String LIST_URL = "/list";
 
-    private final List<MediaModel> mediaList = new ArrayList<>();
+    private final List<Media> mediaList = new ArrayList<>();
 
     /**
      * Constructor
@@ -109,7 +109,7 @@ public class ListServer extends AbstractService {
      *
      * @return List<MediaModel>
      */
-    public List<MediaModel> getItems() {
+    public List<Media> getItems() {
         return mediaList;
     }
 }

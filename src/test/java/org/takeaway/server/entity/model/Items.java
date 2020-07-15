@@ -10,15 +10,15 @@ import java.util.List;
 
 @Getter
 @Setter
-public class ItemsModel {
+public class Items {
 
-    public ItemsModel() {
+    public Items() {
         this.items = new ArrayList<>();
     }
 
     @Expose
     @SerializedName("items")
-    public List<MediaModel> items;
+    public List<Media> items;
 
 
     /**
@@ -29,7 +29,7 @@ public class ItemsModel {
      * @param comment   String
      */
     public void setMedia(int mediaId, String mediaType, String comment) {
-        MediaModel media = new MediaModel();
+        Media media = new Media();
 
         media.setMedia_id(mediaId);
         media.setMedia_type(mediaType);
