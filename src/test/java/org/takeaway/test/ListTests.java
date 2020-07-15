@@ -12,6 +12,7 @@ import org.takeaway.server.entity.model.ItemsModel;
 import org.takeaway.server.entity.model.ListModel;
 import org.takeaway.server.entity.model.MediaModel;
 import org.takeaway.server.entity.model.UpdateListModel;
+import org.takeaway.server.entity.response.AddItemResponse;
 import org.takeaway.server.entity.response.GetList;
 import org.takeaway.server.entity.response.ListResponse;
 import org.testng.Assert;
@@ -34,6 +35,7 @@ public class ListTests extends BaseTest {
 
     @BeforeMethod
     public void beforeMethod() {
+        log.info("Created the list");
         ListModel list = new ListModel();
 
         list.setName(RandomStringUtils.randomAlphabetic(10));
@@ -50,7 +52,12 @@ public class ListTests extends BaseTest {
 
     @AfterMethod
     public void deleteList() {
-        listServer.deleteList(listResponse.getId());
+        log.info("Deleted the list");
+        Response response = listServer.deleteList(listResponse.getId());
+        Assert.assertEquals(response.statusCode(), HttpStatus.SC_OK);
+
+        Response getList = listServer.getList(listResponse.getId());
+        Assert.assertEquals(getList.statusCode(), HttpStatus.SC_NOT_FOUND);
     }
 
     @Test
@@ -105,7 +112,8 @@ public class ListTests extends BaseTest {
         ItemsModel items = new ItemsModel();
         items.setItems(mediaList);
 
-        listServer.addItemToList(listResponse.getId(), items);
+        Response response1 = listServer.addItemToList(listResponse.getId(), items);
+        Assert.assertEquals(response1.statusCode(), HttpStatus.SC_OK);
 
         MediaModel movie1 = listServer.createMedia(238, "movie", "NO comment");
         MediaModel movie2 = listServer.createMedia(490132, "movie", "NO comment");
@@ -135,7 +143,8 @@ public class ListTests extends BaseTest {
         ItemsModel items = new ItemsModel();
         items.setItems(mediaList);
 
-        listServer.addItemToList(listResponse.getId(), items);
+        Response response1 = listServer.addItemToList(listResponse.getId(), items);
+        Assert.assertEquals(response1.statusCode(), HttpStatus.SC_OK);
 
         MediaModel toBeRemoved = listServer.createMedia(597, "movie", null);
 
@@ -156,4 +165,31 @@ public class ListTests extends BaseTest {
         Assert.assertEquals(listResponse1.getResults().get(0).getMedia_type(), friends.getMedia_type());
     }
 
+    @Test
+    public void clearItemsFromList(){
+
+        MediaModel friends = listServer.createMedia(1668, "tv", null);
+        MediaModel titanic = listServer.createMedia(597, "movie", null);
+
+        List<MediaModel> mediaList = new ArrayList<>();
+        mediaList.add(friends);
+        mediaList.add(titanic);
+
+        ItemsModel items = new ItemsModel();
+        items.setItems(mediaList);
+
+        Response response = listServer.addItemToList(listResponse.getId(), items);
+        Assert.assertEquals(response.statusCode(), HttpStatus.SC_OK);
+
+        AddItemResponse addItemResponse = TestHelper.deserializeJson(response, AddItemResponse.class);
+        Assert.assertEquals(addItemResponse.getResults().size(), 2);
+
+        Response clearList = listServer.clearList(listResponse.getId());
+        Assert.assertEquals(clearList.statusCode(), HttpStatus.SC_OK);
+
+        Response list1 = listServer.getList(listResponse.getId());
+        GetList listResponse1 = TestHelper.deserializeJson(list1, GetList.class);
+
+        Assert.assertEquals(listResponse1.getResults().size(), 0);
+    }
 }

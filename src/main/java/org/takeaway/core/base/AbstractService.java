@@ -25,6 +25,7 @@ public abstract class AbstractService extends BaseService {
 
     /**
      * Generic request specification for every api call
+     *
      * @return RequestSpecification
      */
     protected RequestSpecification getRequestSpec() {
@@ -69,7 +70,7 @@ public abstract class AbstractService extends BaseService {
     /**
      * Delete request
      *
-     * @param url  URL
+     * @param url URL
      * @return Response
      */
     protected Response deleteRequest(String url) {
@@ -78,13 +79,14 @@ public abstract class AbstractService extends BaseService {
     }
 
     /**
-     * Delete request
+     * Delete request with payload
      *
+     * @param body Body
      * @param url  URL
      * @return Response
      */
     protected Response deleteRequest(String url, Object body) {
         log.info(String.format("DELETE - %s with Payload - %s", url, body));
-        return request(Method.DELETE, body,url);
+        return request(Method.DELETE, body, url);
     }
 }

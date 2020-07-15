@@ -14,7 +14,7 @@ import java.lang.reflect.Method;
 
 public class BaseTest {
 
-    private final Logger log = Logger.getLogger(getClass());
+    protected final Logger log = Logger.getLogger(getClass());
 
     protected ExtentSparkReporter spark;
     protected ExtentReports extent;

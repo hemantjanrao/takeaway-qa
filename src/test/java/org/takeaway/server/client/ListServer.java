@@ -27,6 +27,11 @@ public class ListServer extends AbstractService {
         return getRequest(LIST_URL + "/" + listId);
     }
 
+    public Response clearList(int listId) {
+        log.info(String.format("Clearing list with id: %d", listId));
+        return getRequest(LIST_URL +"/"+ listId + "/clear");
+    }
+
     /**
      * Method to create the list
      *
