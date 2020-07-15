@@ -10,24 +10,24 @@ import org.takeaway.core.util.PropertyUtils;
 import org.takeaway.server.client.ListServer;
 import org.takeaway.server.entity.model.ItemsModel;
 import org.takeaway.server.entity.model.ListModel;
-import org.takeaway.server.entity.model.MediaModel;
 import org.takeaway.server.entity.model.UpdateListModel;
 import org.takeaway.server.entity.response.AddItemResponse;
 import org.takeaway.server.entity.response.GetList;
 import org.takeaway.server.entity.response.ListResponse;
 import org.testng.Assert;
-import org.testng.annotations.*;
-
-import java.util.ArrayList;
-import java.util.List;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 
 public class ListTests extends BaseTest {
 
     private ListServer listServer;
-    private ListResponse listResponse;
+    private ListResponse createdList;
 
     @BeforeClass
     public void beforeListClass() {
+
         listServer = new ListServer(PropertyUtils.get(Environment.API_PROTOCOL),
                 PropertyUtils.get(Environment.API_URL),
                 PropertyUtils.getInt(Environment.API_VERSION));
@@ -35,7 +35,7 @@ public class ListTests extends BaseTest {
 
     @BeforeMethod
     public void beforeMethod() {
-        log.info("Created the list");
+
         ListModel list = new ListModel();
 
         list.setName(RandomStringUtils.randomAlphabetic(10));
@@ -44,25 +44,25 @@ public class ListTests extends BaseTest {
         Response createdList = listServer.createList(list);
         Assert.assertEquals(createdList.statusCode(), HttpStatus.SC_CREATED);
 
-        listResponse = TestHelper.deserializeJson(createdList, ListResponse.class);
+        this.createdList = TestHelper.deserializeJson(createdList, ListResponse.class);
 
-        Assert.assertEquals(listResponse.getStatus_message(), "The item/record was created successfully.",
+        Assert.assertEquals(this.createdList.getStatus_message(), "The item/record was created successfully.",
                 String.format("List creation with name: %s failed", list.getName()));
     }
 
     @AfterMethod
     public void deleteList() {
-        log.info("Deleted the list");
-        Response response = listServer.deleteList(listResponse.getId());
+
+        Response response = listServer.deleteList(createdList.getId());
         Assert.assertEquals(response.statusCode(), HttpStatus.SC_OK);
 
-        Response getList = listServer.getList(listResponse.getId());
+        Response getList = listServer.getList(createdList.getId());
         Assert.assertEquals(getList.statusCode(), HttpStatus.SC_NOT_FOUND);
     }
 
     @Test
     public void createList() {
-        Assert.assertEquals(listResponse.getStatus_message(), "The item/record was created successfully.");
+        Assert.assertEquals(createdList.getStatus_message(), "The item/record was created successfully.");
     }
 
     @Test
@@ -72,10 +72,10 @@ public class ListTests extends BaseTest {
         updateList.setDescription("Updated description");
         updateList.setName("Updated name");
 
-        Response updatedList = listServer.updateList(listResponse.getId(), updateList);
+        Response updatedList = listServer.updateList(createdList.getId(), updateList);
         Assert.assertEquals(updatedList.statusCode(), HttpStatus.SC_CREATED);
 
-        Response list1 = listServer.getList(listResponse.getId());
+        Response list1 = listServer.getList(createdList.getId());
         GetList listResponse1 = TestHelper.deserializeJson(list1, GetList.class);
 
         Assert.assertEquals(listResponse1.getDescription(), "Updated description");
@@ -85,47 +85,32 @@ public class ListTests extends BaseTest {
     @Test
     public void addItemsToList() {
 
-        MediaModel friends = listServer.createMedia(1668, "tv", null);
-        MediaModel titanic = listServer.createMedia(597, "movie", null);
-
-        List<MediaModel> mediaList = new ArrayList<>();
-        mediaList.add(friends);
-        mediaList.add(titanic);
-
         ItemsModel items = new ItemsModel();
-        items.setItems(mediaList);
+        listServer.setMedia(1668, "tv", null);
+        listServer.setMedia(597, "movie", null);
+        items.setItems(listServer.getItems());
 
-        Response response = listServer.addItemToList(listResponse.getId(), items);
+        Response response = listServer.addItemToList(createdList.getId(), items);
         Assert.assertEquals(response.statusCode(), HttpStatus.SC_OK);
     }
 
     @Test
     public void updateItemsFromList() {
 
-        MediaModel friends = listServer.createMedia(1668, "tv", null);
-        MediaModel titanic = listServer.createMedia(597, "movie", null);
-
-        List<MediaModel> mediaList = new ArrayList<>();
-        mediaList.add(friends);
-        mediaList.add(titanic);
-
         ItemsModel items = new ItemsModel();
-        items.setItems(mediaList);
+        listServer.setMedia(1668, "tv", null);
+        listServer.setMedia(597, "movie", null);
+        items.setItems(listServer.getItems());
 
-        Response response1 = listServer.addItemToList(listResponse.getId(), items);
+        Response response1 = listServer.addItemToList(createdList.getId(), items);
         Assert.assertEquals(response1.statusCode(), HttpStatus.SC_OK);
 
-        MediaModel movie1 = listServer.createMedia(238, "movie", "NO comment");
-        MediaModel movie2 = listServer.createMedia(490132, "movie", "NO comment");
+        ItemsModel itemsToBeUpdated = new ItemsModel();
+        listServer.setMedia(238, "movie", "NO comment");
+        listServer.setMedia(490132, "movie", "NO comment");
+        itemsToBeUpdated.setItems(listServer.getItems());
 
-        List<MediaModel> mediaList2 = new ArrayList<>();
-        mediaList2.add(movie1);
-        mediaList2.add(movie2);
-
-        ItemsModel items1 = new ItemsModel();
-        items1.setItems(mediaList2);
-
-        Response response = listServer.updateItemFromList(listResponse.getId(), items1);
+        Response response = listServer.updateItemFromList(createdList.getId(), itemsToBeUpdated);
 
         Assert.assertEquals(response.statusCode(), HttpStatus.SC_OK);
     }
@@ -133,61 +118,47 @@ public class ListTests extends BaseTest {
     @Test
     public void deleteItemsFromList() {
 
-        MediaModel friends = listServer.createMedia(1668, "tv", null);
-        MediaModel titanic = listServer.createMedia(597, "movie", null);
-
-        List<MediaModel> mediaList = new ArrayList<>();
-        mediaList.add(friends);
-        mediaList.add(titanic);
-
         ItemsModel items = new ItemsModel();
-        items.setItems(mediaList);
+        listServer.setMedia(1668, "tv", null);
+        listServer.setMedia(597, "movie", null);
+        items.setItems(listServer.getItems());
 
-        Response response1 = listServer.addItemToList(listResponse.getId(), items);
+        Response response1 = listServer.addItemToList(createdList.getId(), items);
         Assert.assertEquals(response1.statusCode(), HttpStatus.SC_OK);
 
-        MediaModel toBeRemoved = listServer.createMedia(597, "movie", null);
+        ItemsModel itemsToBeDeleted = new ItemsModel();
+        listServer.setMedia(597, "movie", null);
+        itemsToBeDeleted.setItems(listServer.getItems());
 
-        List<MediaModel> mediaList2 = new ArrayList<>();
-        mediaList2.add(toBeRemoved);
-
-        ItemsModel items1 = new ItemsModel();
-        items1.setItems(mediaList2);
-
-        Response response = listServer.deleteItemFromList(listResponse.getId(), items1);
+        Response response = listServer.deleteItemFromList(createdList.getId(), itemsToBeDeleted);
         Assert.assertEquals(response.statusCode(), HttpStatus.SC_OK);
 
-        Response list1 = listServer.getList(listResponse.getId());
+        Response list1 = listServer.getList(createdList.getId());
         GetList listResponse1 = TestHelper.deserializeJson(list1, GetList.class);
 
         Assert.assertEquals(listResponse1.getResults().size(), 1);
-        Assert.assertEquals(listResponse1.getResults().get(0).getId(), friends.getMedia_id());
-        Assert.assertEquals(listResponse1.getResults().get(0).getMedia_type(), friends.getMedia_type());
+        Assert.assertEquals(listResponse1.getResults().get(0).getId(), 1668);
+        Assert.assertEquals(listResponse1.getResults().get(0).getMedia_type(), "tv");
     }
 
     @Test
-    public void clearItemsFromList(){
-
-        MediaModel friends = listServer.createMedia(1668, "tv", null);
-        MediaModel titanic = listServer.createMedia(597, "movie", null);
-
-        List<MediaModel> mediaList = new ArrayList<>();
-        mediaList.add(friends);
-        mediaList.add(titanic);
+    public void clearItemsFromList() {
 
         ItemsModel items = new ItemsModel();
-        items.setItems(mediaList);
+        listServer.setMedia(1668, "tv", null);
+        listServer.setMedia(597, "movie", null);
+        items.setItems(listServer.getItems());
 
-        Response response = listServer.addItemToList(listResponse.getId(), items);
+        Response response = listServer.addItemToList(createdList.getId(), items);
         Assert.assertEquals(response.statusCode(), HttpStatus.SC_OK);
 
         AddItemResponse addItemResponse = TestHelper.deserializeJson(response, AddItemResponse.class);
         Assert.assertEquals(addItemResponse.getResults().size(), 2);
 
-        Response clearList = listServer.clearList(listResponse.getId());
+        Response clearList = listServer.clearList(createdList.getId());
         Assert.assertEquals(clearList.statusCode(), HttpStatus.SC_OK);
 
-        Response list1 = listServer.getList(listResponse.getId());
+        Response list1 = listServer.getList(createdList.getId());
         GetList listResponse1 = TestHelper.deserializeJson(list1, GetList.class);
 
         Assert.assertEquals(listResponse1.getResults().size(), 0);
