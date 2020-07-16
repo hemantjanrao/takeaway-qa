@@ -4,6 +4,7 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import lombok.Getter;
 import lombok.Setter;
+import org.takeaway.constants.MediaType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,11 +28,11 @@ public class Items {
      * @param mediaType String
      * @param comment   String
      */
-    public void setMedia(int mediaId, String mediaType, String comment) {
+    public void setMedia(int mediaId, MediaType mediaType, String comment) {
         Media media = new Media();
 
         media.setMedia_id(mediaId);
-        media.setMedia_type(mediaType);
+        media.setMedia_type(mediaType.getType());
         media.setComment(comment);
 
         items.add(media);
