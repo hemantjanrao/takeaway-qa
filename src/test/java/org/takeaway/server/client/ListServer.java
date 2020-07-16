@@ -1,17 +1,16 @@
 package org.takeaway.server.client;
 
 import io.restassured.response.Response;
+import org.apache.http.HttpStatus;
+import org.takeaway.constants.ListEndpoints;
 import org.takeaway.core.base.AbstractService;
-import org.takeaway.server.entity.model.Media;
-
-import java.util.ArrayList;
-import java.util.List;
+import org.takeaway.core.helper.TestHelper;
+import org.takeaway.server.entity.response.AddUpdateItemResponse;
+import org.takeaway.server.entity.response.GetListResponse;
+import org.takeaway.server.entity.response.ListResponse;
+import org.testng.Assert;
 
 public class ListServer extends AbstractService {
-
-    private static final String LIST_URL = "/list";
-
-    private final List<Media> mediaList = new ArrayList<>();
 
     /**
      * Constructor
@@ -24,12 +23,38 @@ public class ListServer extends AbstractService {
         super(host, protocol, apiVersion);
     }
 
-    public Response getList(int listId) {
-        return getRequest(LIST_URL + "/" + listId);
+    /**
+     * Method to get the list
+     *
+     * @param listId int
+     * @return Response
+     */
+    public GetListResponse getList(int listId) {
+        Response response = getRequest(ListEndpoints.GET_LIST.getUrl(listId));
+        Assert.assertEquals(response.statusCode(), HttpStatus.SC_OK);
+        return TestHelper.deserializeJson(response, GetListResponse.class);
     }
 
+    public boolean doesListExists(int listId) {
+        Response response = getRequest(ListEndpoints.GET_LIST.getUrl(listId));
+        return response.statusCode() == HttpStatus.SC_OK;
+    }
+
+    public int getListSize(int listId){
+        Response response = getRequest(ListEndpoints.GET_LIST.getUrl(listId));
+        Assert.assertEquals(response.statusCode(), HttpStatus.SC_OK);
+
+        return TestHelper.deserializeJson(response, GetListResponse.class).results.size();
+    }
+
+    /**
+     * Method to remove all the items from the list
+     *
+     * @param listId int
+     * @return Response
+     */
     public Response clearList(int listId) {
-        return getRequest(LIST_URL + "/" + listId + "/clear");
+        return getRequest(ListEndpoints.CLEAR.getUrl(listId));
     }
 
     /**
@@ -38,8 +63,13 @@ public class ListServer extends AbstractService {
      * @param list ListModel
      * @return Response
      */
-    public Response createList(String list) {
-        return postRequest(LIST_URL, list);
+    public ListResponse createList(String list) {
+
+        Response response = postRequest(ListEndpoints.LIST.getUrl(), list);
+
+        Assert.assertEquals(response.statusCode(), HttpStatus.SC_CREATED);
+
+        return TestHelper.deserializeJson(response, ListResponse.class);
     }
 
     /**
@@ -49,7 +79,7 @@ public class ListServer extends AbstractService {
      * @return Response
      */
     public Response deleteList(int listId) {
-        return deleteRequest(LIST_URL + "/" + listId);
+        return deleteRequest(ListEndpoints.DELETE.getUrl(listId));
     }
 
     /**
@@ -60,7 +90,7 @@ public class ListServer extends AbstractService {
      * @return Response
      */
     public Response updateList(int listId, String updatedList) {
-        return updateRequest(LIST_URL + "/" + listId, updatedList);
+        return updateRequest(ListEndpoints.GET_LIST.getUrl(listId), updatedList);
     }
 
     /**
@@ -70,23 +100,12 @@ public class ListServer extends AbstractService {
      * @param itemList ItemsModel
      * @return Response
      */
-    public Response addItemToList(int listId, String itemList) {
-        Response response = postRequest(LIST_URL + "/" + listId + "/items", itemList);
-        getItems().clear();
-        return response;
-    }
+    public AddUpdateItemResponse addUpdateItemsToList(int listId, String itemList) {
+        Response response = postRequest(ListEndpoints.ITEMS.getUrl(listId), itemList);
 
-    /**
-     * Method to update item to the list
-     *
-     * @param listId   int
-     * @param itemList ItemsModel
-     * @return Response
-     */
-    public Response updateItemFromList(int listId, String itemList) {
-        Response response = updateRequest(LIST_URL + "/" + listId + "/items", itemList);
-        getItems().clear();
-        return response;
+        Assert.assertEquals(response.statusCode(), HttpStatus.SC_OK);
+
+        return TestHelper.deserializeJson(response, AddUpdateItemResponse.class);
     }
 
     /**
@@ -97,19 +116,7 @@ public class ListServer extends AbstractService {
      * @return Response
      */
     public Response deleteItemFromList(int listId, String itemList) {
-        Response response = deleteRequest(LIST_URL + "/" + listId + "/items", itemList);
-        getItems().clear();
-        return response;
+        return deleteRequest(ListEndpoints.ITEMS.getUrl(listId), itemList);
     }
 
-
-
-    /**
-     * Method to get list of items
-     *
-     * @return List<MediaModel>
-     */
-    public List<Media> getItems() {
-        return mediaList;
-    }
 }

@@ -9,7 +9,7 @@ import java.util.List;
 
 @Getter
 @Setter
-public class AddItemResponse {
+public class AddUpdateItemResponse {
 
     @Expose
     @SerializedName("success")
