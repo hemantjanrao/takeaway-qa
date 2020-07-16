@@ -13,7 +13,7 @@ import java.util.Properties;
 public class PropertyUtils {
     private static final String PROPERTY_FILE_NAME = "config.properties";
     private static final Properties PROPERTIES = getProperties();
-    private static Logger log = Logger.getLogger(PropertyUtils.class);
+    private static final Logger log = Logger.getLogger(PropertyUtils.class);
 
     /**
      * This method provides Properties object

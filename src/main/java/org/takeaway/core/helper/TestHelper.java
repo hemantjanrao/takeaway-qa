@@ -16,7 +16,7 @@ public class TestHelper {
     public static <T> T deserializeJson(Response res, Class<T> requiredClass) {
         JsonObject json = getJsonFromResponse(res);
         Gson gson = new Gson();
-        return (T)gson.fromJson(json, requiredClass);
+        return gson.fromJson(json, requiredClass);
     }
 
     public static String serializeToJson(Object requiredClass) {

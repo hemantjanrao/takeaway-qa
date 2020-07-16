@@ -7,7 +7,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class UpdateLis {
+public class UpdateList {
 
     @Expose
     @SerializedName("description")

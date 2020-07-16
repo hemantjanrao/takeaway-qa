@@ -33,6 +33,7 @@
             <version>${aspectj.version}</version>
         </dependency>
 
+        <!-- TesNG  -->
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
@@ -127,7 +128,6 @@
             <version>${lombok.version}</version>
             <scope>provided</scope>
         </dependency>
-
 
     </dependencies>
 

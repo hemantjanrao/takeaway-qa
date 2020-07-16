@@ -9,7 +9,6 @@ Framework is build using the stack
 * [Extent Reporting](https://extentreports.com/)
 * [Lombok](https://projectlombok.org/)
 
-Also, you can check all the dependencies on https://github.com/hemantjanrao/takeaway-qa/network/dependencies
 <br>
 
 ## Project Pre-Installation

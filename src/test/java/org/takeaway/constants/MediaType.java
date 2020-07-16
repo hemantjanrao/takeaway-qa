@@ -4,7 +4,7 @@ public enum MediaType {
     MOVIE("movie"),
     TV("tv");
 
-    String type ;
+    final String type ;
 
     MediaType(String type) {
         this.type = type;

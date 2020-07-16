@@ -10,7 +10,6 @@ import org.takeaway.server.entity.model.Media;
 import org.takeaway.server.entity.response.AddUpdateItemResponse;
 import org.takeaway.server.entity.response.GetListResponse;
 import org.takeaway.server.entity.response.ListResponse;
-import org.takeaway.server.entity.response.MediaStatus;
 import org.testng.Assert;
 
 import java.util.ArrayList;
@@ -158,7 +157,7 @@ public class ListServer extends AbstractService {
     }
 
     /**
-     * Method to check whether element is deleted from the given list
+     * Method to check whether item exists
      *
      * @param listId int
      * @param itemList List<Media>

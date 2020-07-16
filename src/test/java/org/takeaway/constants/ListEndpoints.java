@@ -4,7 +4,7 @@ public enum ListEndpoints {
 
     CLEAR("/list/%d/clear"),
     DELETE("/list/%d"),
-    GET_LIST("/list/%d"),
+    GET_LIST("/list/%d??page=1"),
     ITEMS("/list/%d/items"),
     ITEM_STATUS("/list/%d/item_status?media_id=%d&media_type=%s"),
     LIST("/list");
