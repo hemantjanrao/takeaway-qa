@@ -89,8 +89,7 @@ public class ListTests extends BaseTest {
         items.setMedia(1668, "tv", null);
         items.setMedia(597, "movie", null);
 
-        AddUpdateItemResponse response = listServer.addUpdateItemsToList(createdList.getId(),
-                TestHelper.serializeToJson(items));
+        AddUpdateItemResponse response = listServer.addItemsToList(createdList.getId(), items);
         Assert.assertTrue(response.isSuccess(), "Failed to add items to the list");
 
         Assert.assertTrue(listServer.doesItemsExistsInList(createdList.getId(), items.getItems()));
@@ -105,21 +104,18 @@ public class ListTests extends BaseTest {
         items.setMedia(1668, "tv", null);
         items.setMedia(597, "movie", null);
 
-        AddUpdateItemResponse response = listServer.addUpdateItemsToList(createdList.getId(),
-                TestHelper.serializeToJson(items));
+        AddUpdateItemResponse response = listServer.addItemsToList(createdList.getId(), items);
         Assert.assertTrue(response.isSuccess());
         test.pass(String.format("Added items %s to the list successfully ", TestHelper.serializeToJson(items)));
 
         Items itemsToBeUpdated = new Items();
-        itemsToBeUpdated.setMedia(238, "movie", "NO comment");
-        itemsToBeUpdated.setMedia(490132, "movie", "NO comment");
+        itemsToBeUpdated.setMedia(1668, "tv", "great tv show");
+        itemsToBeUpdated.setMedia(597, "movie", "great movie");
 
-        AddUpdateItemResponse updatedItemsResponse = listServer.addUpdateItemsToList(createdList.getId(),
-                TestHelper.serializeToJson(itemsToBeUpdated));
+        AddUpdateItemResponse updatedItemsResponse = listServer.updateItemsToList(createdList.getId(), itemsToBeUpdated);
         Assert.assertTrue(updatedItemsResponse.isSuccess());
 
         Assert.assertTrue(listServer.doesItemsExistsInList(createdList.getId(), itemsToBeUpdated.getItems()));
-
         test.pass(String.format("Updated items %s to the list successfully ", TestHelper.serializeToJson(itemsToBeUpdated)));
     }
 
@@ -130,15 +126,14 @@ public class ListTests extends BaseTest {
         items.setMedia(1668, "tv", null);
         items.setMedia(597, "movie", null);
 
-        AddUpdateItemResponse response = listServer.addUpdateItemsToList(createdList.getId(), TestHelper.serializeToJson(items));
+        AddUpdateItemResponse response = listServer.addItemsToList(createdList.getId(), items);
         Assert.assertTrue(response.isSuccess());
         test.pass(String.format("Added items %s to the list successfully ", TestHelper.serializeToJson(items)));
 
         Items itemsToBeDeleted = new Items();
         itemsToBeDeleted.setMedia(597, "movie", null);
 
-        Response deletedItemsResponse = listServer.deleteItemFromList(createdList.getId(),
-                TestHelper.serializeToJson(itemsToBeDeleted));
+        Response deletedItemsResponse = listServer.deleteItemFromList(createdList.getId(), itemsToBeDeleted);
         Assert.assertEquals(deletedItemsResponse.statusCode(), HttpStatus.SC_OK);
 
         Assert.assertFalse(listServer.doesItemsExistsInList(createdList.getId(), itemsToBeDeleted.getItems()));
@@ -152,7 +147,7 @@ public class ListTests extends BaseTest {
         items.setMedia(1668, "tv", null);
         items.setMedia(597, "movie", null);
 
-        AddUpdateItemResponse addItemsResponse = listServer.addUpdateItemsToList(createdList.getId(), TestHelper.serializeToJson(items));
+        AddUpdateItemResponse addItemsResponse = listServer.addItemsToList(createdList.getId(), items);
         Assert.assertTrue(addItemsResponse.isSuccess());
         test.pass(String.format("Added items %s to the list successfully ", TestHelper.serializeToJson(items)));
 

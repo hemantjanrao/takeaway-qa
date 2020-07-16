@@ -122,9 +122,9 @@ public class ListServer extends AbstractService {
      * @param itemList ItemsModel
      * @return Response
      */
-    public AddUpdateItemResponse addUpdateItemsToList(int listId, String itemList) {
+    public AddUpdateItemResponse addItemsToList(int listId, Items itemList) {
 
-        Response response = postRequest(ListEndpoints.ITEMS.getUrl(listId), itemList);
+        Response response = postRequest(ListEndpoints.ITEMS.getUrl(listId), TestHelper.serializeToJson(itemList));
         Assert.assertEquals(response.statusCode(), HttpStatus.SC_OK);
 
         return TestHelper.deserializeJson(response, AddUpdateItemResponse.class);
@@ -137,9 +137,24 @@ public class ListServer extends AbstractService {
      * @param itemList ItemsModel
      * @return Response
      */
-    public Response deleteItemFromList(int listId, String itemList) {
+    public AddUpdateItemResponse updateItemsToList(int listId, Items itemList) {
 
-        return deleteRequest(ListEndpoints.ITEMS.getUrl(listId), itemList);
+        Response response = updateRequest(ListEndpoints.ITEMS.getUrl(listId), TestHelper.serializeToJson(itemList));
+        Assert.assertEquals(response.statusCode(), HttpStatus.SC_OK);
+
+        return TestHelper.deserializeJson(response, AddUpdateItemResponse.class);
+    }
+
+    /**
+     * Method to update item to the list
+     *
+     * @param listId   int
+     * @param itemList ItemsModel
+     * @return Response
+     */
+    public Response deleteItemFromList(int listId, Items itemList) {
+
+        return deleteRequest(ListEndpoints.ITEMS.getUrl(listId), TestHelper.serializeToJson(itemList));
     }
 
     /**
