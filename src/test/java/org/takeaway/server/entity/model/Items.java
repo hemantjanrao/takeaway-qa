@@ -12,14 +12,13 @@ import java.util.List;
 @Setter
 public class Items {
 
-    public Items() {
-        this.items = new ArrayList<>();
-    }
-
     @Expose
     @SerializedName("items")
     public List<Media> items;
 
+    public Items() {
+        this.items = new ArrayList<>();
+    }
 
     /**
      * Method to set media

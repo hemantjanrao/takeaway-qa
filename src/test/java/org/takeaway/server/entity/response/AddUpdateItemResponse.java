@@ -21,7 +21,7 @@ public class AddUpdateItemResponse {
 
     @Expose
     @SerializedName("results")
-    public List<Media> results;
+    public List<MediaStatus> results;
 }
 
 

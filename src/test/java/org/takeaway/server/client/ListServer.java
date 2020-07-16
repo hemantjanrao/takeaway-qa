@@ -5,10 +5,16 @@ import org.apache.http.HttpStatus;
 import org.takeaway.constants.ListEndpoints;
 import org.takeaway.core.base.AbstractService;
 import org.takeaway.core.helper.TestHelper;
+import org.takeaway.server.entity.model.Items;
+import org.takeaway.server.entity.model.Media;
 import org.takeaway.server.entity.response.AddUpdateItemResponse;
 import org.takeaway.server.entity.response.GetListResponse;
 import org.takeaway.server.entity.response.ListResponse;
+import org.takeaway.server.entity.response.MediaStatus;
 import org.testng.Assert;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ListServer extends AbstractService {
 
@@ -30,17 +36,32 @@ public class ListServer extends AbstractService {
      * @return Response
      */
     public GetListResponse getList(int listId) {
+
         Response response = getRequest(ListEndpoints.GET_LIST.getUrl(listId));
         Assert.assertEquals(response.statusCode(), HttpStatus.SC_OK);
         return TestHelper.deserializeJson(response, GetListResponse.class);
     }
 
+    /**
+     * Method to check whether list exists or not
+     *
+     * @param listId int
+     * @return Boolean
+     */
     public boolean doesListExists(int listId) {
+
         Response response = getRequest(ListEndpoints.GET_LIST.getUrl(listId));
         return response.statusCode() == HttpStatus.SC_OK;
     }
 
+    /**
+     * Method to get provided list size
+     *
+     * @param listId int
+     * @return int
+     */
     public int getListSize(int listId){
+
         Response response = getRequest(ListEndpoints.GET_LIST.getUrl(listId));
         Assert.assertEquals(response.statusCode(), HttpStatus.SC_OK);
 
@@ -66,7 +87,6 @@ public class ListServer extends AbstractService {
     public ListResponse createList(String list) {
 
         Response response = postRequest(ListEndpoints.LIST.getUrl(), list);
-
         Assert.assertEquals(response.statusCode(), HttpStatus.SC_CREATED);
 
         return TestHelper.deserializeJson(response, ListResponse.class);
@@ -79,6 +99,7 @@ public class ListServer extends AbstractService {
      * @return Response
      */
     public Response deleteList(int listId) {
+
         return deleteRequest(ListEndpoints.DELETE.getUrl(listId));
     }
 
@@ -90,6 +111,7 @@ public class ListServer extends AbstractService {
      * @return Response
      */
     public Response updateList(int listId, String updatedList) {
+
         return updateRequest(ListEndpoints.GET_LIST.getUrl(listId), updatedList);
     }
 
@@ -101,8 +123,8 @@ public class ListServer extends AbstractService {
      * @return Response
      */
     public AddUpdateItemResponse addUpdateItemsToList(int listId, String itemList) {
-        Response response = postRequest(ListEndpoints.ITEMS.getUrl(listId), itemList);
 
+        Response response = postRequest(ListEndpoints.ITEMS.getUrl(listId), itemList);
         Assert.assertEquals(response.statusCode(), HttpStatus.SC_OK);
 
         return TestHelper.deserializeJson(response, AddUpdateItemResponse.class);
@@ -116,7 +138,33 @@ public class ListServer extends AbstractService {
      * @return Response
      */
     public Response deleteItemFromList(int listId, String itemList) {
+
         return deleteRequest(ListEndpoints.ITEMS.getUrl(listId), itemList);
     }
 
+    /**
+     * Method to check whether element is deleted from the given list
+     *
+     * @param listId int
+     * @param itemList List<Media>
+     * @return Boolean
+     */
+    public boolean doesItemsExistsInList(int listId, List<Media> itemList){
+
+        List<Boolean> status = new ArrayList<>();
+
+        for (Media item : itemList) {
+            Response response = getRequest(ListEndpoints.ITEM_STATUS.getUrl(listId, item.getMedia_id(), item.getMedia_type()));
+            int statusCode = response.statusCode();
+
+            if (statusCode == HttpStatus.SC_OK) {
+                status.add(true);
+            } else if (statusCode == HttpStatus.SC_NOT_FOUND) {
+                status.add(false);
+            } else {
+                throw new IllegalStateException("Unexpected return code");
+            }
+        }
+        return !status.contains(false);
+    }
 }

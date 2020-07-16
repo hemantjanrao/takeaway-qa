@@ -6,6 +6,7 @@ public enum ListEndpoints {
     DELETE("/list/%d"),
     GET_LIST("/list/%d"),
     ITEMS("/list/%d/items"),
+    ITEM_STATUS("/list/%d/item_status?media_id=%d&media_type=%s"),
     LIST("/list");
 
     private final String url;

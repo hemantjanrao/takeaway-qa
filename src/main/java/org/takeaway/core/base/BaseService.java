@@ -29,16 +29,6 @@ public abstract class BaseService {
     }
 
     /**
-     * Performs GET request of the URL with parameters.
-     *
-     * @return The response from the request
-     */
-    @Deprecated
-    protected Response request(Map<String, ?> params, String url) {
-        return request(Method.GET, params, url);
-    }
-
-    /**
      * Performs specified HTTP verb request of the URL with parameters.
      *
      * @param method the HTTP method to request

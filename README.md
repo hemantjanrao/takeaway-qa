@@ -59,4 +59,10 @@ It is also possible to trigger tests from command line.
         mvn clean test
         
 #### Extent report
-You can find generated extent report for tests under "/test-output/testReporter.html"  
+You can find generated extent report for tests under "/test-output/testReporter.html"
+
+##### Dashboard
+![Alt text](report_dashboard.png)
+
+##### Test report
+![Alt text](test_report.png)

@@ -7,7 +7,8 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class Media {
+public class MediaStatus {
+
     @Expose
     @SerializedName("media_type")
     public String media_type;

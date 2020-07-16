@@ -38,6 +38,12 @@ public abstract class AbstractService extends BaseService {
                 .accept("*/*");
     }
 
+    /**
+     * Get request
+     *
+     * @param url String
+     * @return Response
+     */
     protected Response getRequest(String url) {
         log.info(String.format("GET - %s", url));
         return request(Method.GET, url);

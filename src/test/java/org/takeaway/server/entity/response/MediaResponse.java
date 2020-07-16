@@ -9,7 +9,6 @@ import lombok.Setter;
 @Setter
 public class MediaResponse {
 
-
     @Expose
     @SerializedName("id")
     public int id;
