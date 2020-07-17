@@ -95,8 +95,7 @@ public class ListTests extends BaseTest {
 
         Assert.assertTrue(listServer.doesItemsExistsInList(createdList.getId(), items.getItems()),
                 String.format("Item %s does not exists",TestHelper.serializeToJson(items)));
-        test.pass(String.format("Added items %s to the list successfully ",
-                TestHelper.serializeToJson(items)));
+        test.pass(String.format("Added items %s to the list successfully ", TestHelper.serializeToJson(items)));
     }
 
     @Test(description = "To verify updating items from the created list")

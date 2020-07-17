@@ -130,6 +130,22 @@ public class ListServer extends AbstractService {
     }
 
     /**
+     * Overloaded method to check with desired HTTP status code
+     *
+     * @param listId int
+     * @param itemList Items
+     * @param statusCode int
+     * @return AddUpdateItemResponse
+     */
+    public AddUpdateItemResponse addItemsToList(int listId, Items itemList, int statusCode) {
+
+        Response response = postRequest(ListEndpoints.ITEMS.getUrl(listId), TestHelper.serializeToJson(itemList));
+        Assert.assertEquals(response.statusCode(), statusCode);
+
+        return TestHelper.deserializeJson(response, AddUpdateItemResponse.class);
+    }
+
+    /**
      * Method to update item to the list
      *
      * @param listId   int
@@ -140,6 +156,22 @@ public class ListServer extends AbstractService {
 
         Response response = updateRequest(ListEndpoints.ITEMS.getUrl(listId), TestHelper.serializeToJson(itemList));
         Assert.assertEquals(response.statusCode(), HttpStatus.SC_OK);
+
+        return TestHelper.deserializeJson(response, AddUpdateItemResponse.class);
+    }
+
+    /**
+     * Overloaded method to check with desired HTTP status code
+     *
+     * @param listId int
+     * @param itemList Items
+     * @param statusCode int
+     * @return AddUpdateItemResponse
+     */
+    public AddUpdateItemResponse updateItemsToList(int listId, Items itemList, int statusCode) {
+
+        Response response = updateRequest(ListEndpoints.ITEMS.getUrl(listId), TestHelper.serializeToJson(itemList));
+        Assert.assertEquals(response.statusCode(), statusCode);
 
         return TestHelper.deserializeJson(response, AddUpdateItemResponse.class);
     }
