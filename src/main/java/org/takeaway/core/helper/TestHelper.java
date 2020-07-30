@@ -9,18 +9,18 @@ import org.json.JSONObject;
 public class TestHelper {
 
     private static JsonObject getJsonFromResponse(Response res) {
-        Gson gson = new Gson();
+        var gson = new Gson();
         return gson.fromJson(new JSONObject(res.getBody().asString()).toString(), JsonObject.class);
     }
 
     public static <T> T deserializeJson(Response res, Class<T> requiredClass) {
-        JsonObject json = getJsonFromResponse(res);
-        Gson gson = new Gson();
+        var json = getJsonFromResponse(res);
+        var gson = new Gson();
         return gson.fromJson(json, requiredClass);
     }
 
     public static String serializeToJson(Object requiredClass) {
-        Gson gson = new Gson();
+        var gson = new Gson();
         return gson.toJson(requiredClass);
     }
 }

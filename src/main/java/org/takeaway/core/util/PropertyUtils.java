@@ -7,7 +7,6 @@ import org.apache.log4j.Logger;
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Properties;
 
 public class PropertyUtils {
@@ -22,8 +21,8 @@ public class PropertyUtils {
      */
     private static synchronized Properties getProperties() {
         try {
-            InputStream inputStream = new BufferedInputStream(new FileInputStream(PROPERTY_FILE_NAME));
-            Properties properties = new Properties();
+            var inputStream = new BufferedInputStream(new FileInputStream(PROPERTY_FILE_NAME));
+            var properties = new Properties();
             properties.load(inputStream);
             return properties;
         } catch (IOException e) {
@@ -54,14 +53,5 @@ public class PropertyUtils {
     public static int getInt(Environment param) {
         return Integer.parseInt(get(param).trim());
     }
-
-    /**
-     * @param param Environment
-     * @return Boolean
-     */
-    public static boolean getBoolean(Environment param) {
-        return Boolean.parseBoolean(get(param).trim());
-    }
-
 }
 
