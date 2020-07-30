@@ -3,7 +3,6 @@ package org.takeaway.test;
 import io.restassured.response.Response;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.http.HttpStatus;
-import org.takeaway.constants.MediaType;
 import org.takeaway.core.base.BaseTest;
 import org.takeaway.core.helper.TestHelper;
 import org.takeaway.core.util.Environment;
@@ -11,15 +10,13 @@ import org.takeaway.core.util.PropertyUtils;
 import org.takeaway.server.client.ListServer;
 import org.takeaway.server.entity.model.Items;
 import org.takeaway.server.entity.model.List;
+import org.takeaway.server.entity.model.Media;
 import org.takeaway.server.entity.model.UpdateList;
 import org.takeaway.server.entity.response.AddUpdateItemResponse;
 import org.takeaway.server.entity.response.GetListResponse;
 import org.takeaway.server.entity.response.ListResponse;
 import org.testng.Assert;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.testng.annotations.*;
 
 public class ListTests extends BaseTest {
 
@@ -83,12 +80,19 @@ public class ListTests extends BaseTest {
         test.pass(String.format("Updated list with %s successfully ", TestHelper.serializeToJson(updateList)));
     }
 
-    @Test(description = "To verify adding item to the created list")
-    public void testAddItemsToList() {
+    @DataProvider
+    public Object[][] getItems() {
+        return new Object[][]{
+                {new Media(1668, "tv", null)},
+                {new Media(597, "movie", null)}
+        };
+    }
+
+    @Test(dataProvider = "getItems",description = "To verify adding item to the created list")
+    public void testAddItemsToList(Media media) {
 
         Items items = new Items();
-        items.setMedia(1668, MediaType.TV, null);
-        items.setMedia(597, MediaType.MOVIE, null);
+        items.setMedia(media.getMedia_id(), media.getMedia_type(), media.getComment());
 
         AddUpdateItemResponse addItemsResponse = listServer.addItemsToList(createdList.getId(), items);
         Assert.assertTrue(addItemsResponse.isSuccess(), "Failed to add items to the list");
@@ -102,15 +106,15 @@ public class ListTests extends BaseTest {
     public void testUpdateItemsFromList() {
 
         Items items = new Items();
-        items.setMedia(1668, MediaType.TV, null);
-        items.setMedia(597, MediaType.MOVIE, null);
+        items.setMedia(1668, "tv", null);
+        items.setMedia(597, "movie", null);
 
         AddUpdateItemResponse addItemsResponse = listServer.addItemsToList(createdList.getId(), items);
         Assert.assertTrue(addItemsResponse.isSuccess(), "Failed to add items to the list");
         test.pass(String.format("Added items %s to the list successfully ", TestHelper.serializeToJson(items)));
 
         Items itemsToBeUpdated = new Items();
-        itemsToBeUpdated.setMedia(1668, MediaType.TV, "great tv show");
+        itemsToBeUpdated.setMedia(1668, "tv", "great tv show");
 
         AddUpdateItemResponse updatedItemsResponse = listServer.updateItemsToList(createdList.getId(), itemsToBeUpdated);
         Assert.assertTrue(updatedItemsResponse.isSuccess(), "Failed to update items to the list");
@@ -124,15 +128,15 @@ public class ListTests extends BaseTest {
     public void testDeleteItemsFromList() {
 
         Items items = new Items();
-        items.setMedia(1668, MediaType.TV, null);
-        items.setMedia(597, MediaType.MOVIE, null);
+        items.setMedia(1668, "tv", null);
+        items.setMedia(597, "movie", null);
 
         AddUpdateItemResponse addItemsResponse = listServer.addItemsToList(createdList.getId(), items);
         Assert.assertTrue(addItemsResponse.isSuccess(), "Failed to add items to the list");
         test.pass(String.format("Added items %s to the list successfully ", TestHelper.serializeToJson(items)));
 
         Items itemsToBeDeleted = new Items();
-        itemsToBeDeleted.setMedia(597, MediaType.MOVIE, null);
+        itemsToBeDeleted.setMedia(597, "movie", null);
 
         Response deletedItemsResponse = listServer.deleteItemFromList(createdList.getId(), itemsToBeDeleted);
         Assert.assertEquals(deletedItemsResponse.statusCode(), HttpStatus.SC_OK);
@@ -146,8 +150,8 @@ public class ListTests extends BaseTest {
     public void testClearItemsFromList() {
 
         Items items = new Items();
-        items.setMedia(1668, MediaType.TV, null);
-        items.setMedia(597, MediaType.MOVIE, null);
+        items.setMedia(1668, "tv", null);
+        items.setMedia(597, "movie", null);
 
         AddUpdateItemResponse addItemsResponse = listServer.addItemsToList(createdList.getId(), items);
         Assert.assertTrue(addItemsResponse.isSuccess(), "Failed to add items to the list");

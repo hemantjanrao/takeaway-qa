@@ -4,6 +4,7 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import lombok.Getter;
 import lombok.Setter;
+import org.takeaway.constants.MediaType;
 
 @Getter
 @Setter
@@ -20,4 +21,10 @@ public class Media {
     @Expose
     @SerializedName("comment")
     private String comment;
+
+    public Media(int media_id, String media_type, String comment) {
+        this.media_type = media_type;
+        this.media_id = media_id;
+        this.comment = comment;
+    }
 }
