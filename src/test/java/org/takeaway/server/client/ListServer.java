@@ -36,7 +36,7 @@ public class ListServer extends AbstractService {
      */
     public GetListResponse getList(int listId) {
 
-        Response response = getRequest(ListEndpoints.GET_LIST.getUrl(listId));
+        var response = getRequest(ListEndpoints.GET_LIST.getUrl(listId));
         Assert.assertEquals(response.statusCode(), HttpStatus.SC_OK);
         return TestHelper.deserializeJson(response, GetListResponse.class);
     }
@@ -49,7 +49,7 @@ public class ListServer extends AbstractService {
      */
     public boolean doesListExists(int listId) {
 
-        Response response = getRequest(ListEndpoints.GET_LIST.getUrl(listId));
+        var response = getRequest(ListEndpoints.GET_LIST.getUrl(listId));
         return response.statusCode() == HttpStatus.SC_OK;
     }
 
@@ -61,7 +61,7 @@ public class ListServer extends AbstractService {
      */
     public int getListSize(int listId){
 
-        Response response = getRequest(ListEndpoints.GET_LIST.getUrl(listId));
+        var response = getRequest(ListEndpoints.GET_LIST.getUrl(listId));
         Assert.assertEquals(response.statusCode(), HttpStatus.SC_OK);
 
         return TestHelper.deserializeJson(response, GetListResponse.class).results.size();
@@ -85,7 +85,7 @@ public class ListServer extends AbstractService {
      */
     public ListResponse createList(String list) {
 
-        Response response = postRequest(ListEndpoints.LIST.getUrl(), list);
+        var response = postRequest(ListEndpoints.LIST.getUrl(), list);
         Assert.assertEquals(response.statusCode(), HttpStatus.SC_CREATED);
 
         return TestHelper.deserializeJson(response, ListResponse.class);
@@ -123,7 +123,7 @@ public class ListServer extends AbstractService {
      */
     public AddUpdateItemResponse addItemsToList(int listId, Items itemList) {
 
-        Response response = postRequest(ListEndpoints.ITEMS.getUrl(listId), TestHelper.serializeToJson(itemList));
+        var response = postRequest(ListEndpoints.ITEMS.getUrl(listId), TestHelper.serializeToJson(itemList));
         Assert.assertEquals(response.statusCode(), HttpStatus.SC_OK);
 
         return TestHelper.deserializeJson(response, AddUpdateItemResponse.class);
@@ -139,7 +139,7 @@ public class ListServer extends AbstractService {
      */
     public AddUpdateItemResponse addItemsToList(int listId, Items itemList, int statusCode) {
 
-        Response response = postRequest(ListEndpoints.ITEMS.getUrl(listId), TestHelper.serializeToJson(itemList));
+        var response = postRequest(ListEndpoints.ITEMS.getUrl(listId), TestHelper.serializeToJson(itemList));
         Assert.assertEquals(response.statusCode(), statusCode);
 
         return TestHelper.deserializeJson(response, AddUpdateItemResponse.class);
@@ -154,7 +154,7 @@ public class ListServer extends AbstractService {
      */
     public AddUpdateItemResponse updateItemsToList(int listId, Items itemList) {
 
-        Response response = updateRequest(ListEndpoints.ITEMS.getUrl(listId), TestHelper.serializeToJson(itemList));
+        var response = updateRequest(ListEndpoints.ITEMS.getUrl(listId), TestHelper.serializeToJson(itemList));
         Assert.assertEquals(response.statusCode(), HttpStatus.SC_OK);
 
         return TestHelper.deserializeJson(response, AddUpdateItemResponse.class);
@@ -170,7 +170,7 @@ public class ListServer extends AbstractService {
      */
     public AddUpdateItemResponse updateItemsToList(int listId, Items itemList, int statusCode) {
 
-        Response response = updateRequest(ListEndpoints.ITEMS.getUrl(listId), TestHelper.serializeToJson(itemList));
+        var response = updateRequest(ListEndpoints.ITEMS.getUrl(listId), TestHelper.serializeToJson(itemList));
         Assert.assertEquals(response.statusCode(), statusCode);
 
         return TestHelper.deserializeJson(response, AddUpdateItemResponse.class);
@@ -197,7 +197,7 @@ public class ListServer extends AbstractService {
      */
     public boolean doesItemsExistsInList(int listId, List<Media> itemList){
 
-        List<Boolean> status = new ArrayList<>();
+        var status = new ArrayList<>();
 
         for (Media item : itemList) {
             Response response = getRequest(ListEndpoints.ITEM_STATUS.getUrl(listId, item.getMedia_id(), item.getMedia_type()));

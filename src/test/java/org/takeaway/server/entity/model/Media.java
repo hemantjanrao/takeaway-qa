@@ -20,4 +20,10 @@ public class Media {
     @Expose
     @SerializedName("comment")
     private String comment;
+
+    public Media(int media_id, String media_type, String comment) {
+        this.media_type = media_type;
+        this.media_id = media_id;
+        this.comment = comment;
+    }
 }

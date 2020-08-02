@@ -1,9 +1,7 @@
 package org.takeaway.test;
 
-import io.restassured.response.Response;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.http.HttpStatus;
-import org.takeaway.constants.MediaType;
 import org.takeaway.core.base.BaseTest;
 import org.takeaway.core.helper.TestHelper;
 import org.takeaway.core.util.Environment;
@@ -11,15 +9,12 @@ import org.takeaway.core.util.PropertyUtils;
 import org.takeaway.server.client.ListServer;
 import org.takeaway.server.entity.model.Items;
 import org.takeaway.server.entity.model.List;
+import org.takeaway.server.entity.model.Media;
 import org.takeaway.server.entity.model.UpdateList;
 import org.takeaway.server.entity.response.AddUpdateItemResponse;
-import org.takeaway.server.entity.response.GetListResponse;
 import org.takeaway.server.entity.response.ListResponse;
 import org.testng.Assert;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.testng.annotations.*;
 
 public class ListTests extends BaseTest {
 
@@ -37,7 +32,7 @@ public class ListTests extends BaseTest {
     @BeforeMethod(description = "Create list")
     public void createList() {
 
-        List list = new List();
+        var list = new List();
         list.setName(RandomStringUtils.randomAlphabetic(10));
         list.setIso_639_1("en");
 
@@ -52,7 +47,7 @@ public class ListTests extends BaseTest {
     @AfterMethod(description = "Delete list")
     public void testDeleteList() {
 
-        Response response = listServer.deleteList(createdList.getId());
+        var response = listServer.deleteList(createdList.getId());
         Assert.assertEquals(response.statusCode(), HttpStatus.SC_OK);
 
         Assert.assertFalse(listServer.doesListExists(createdList.getId()));
@@ -68,14 +63,14 @@ public class ListTests extends BaseTest {
     @Test(description = "To verify list update")
     public void testUpdateList() {
 
-        UpdateList updateList = new UpdateList();
+        var updateList = new UpdateList();
         updateList.setDescription("Updated description");
         updateList.setName("Updated name");
 
-        Response updatedList = listServer.updateList(createdList.getId(), TestHelper.serializeToJson(updateList));
+        var updatedList = listServer.updateList(createdList.getId(), TestHelper.serializeToJson(updateList));
         Assert.assertEquals(updatedList.statusCode(), HttpStatus.SC_CREATED);
 
-        GetListResponse getListResponse = listServer.getList(createdList.getId());
+        var getListResponse = listServer.getList(createdList.getId());
 
         Assert.assertEquals(getListResponse.getDescription(), "Updated description");
         Assert.assertEquals(getListResponse.getName(), "Updated name");
@@ -83,14 +78,21 @@ public class ListTests extends BaseTest {
         test.pass(String.format("Updated list with %s successfully ", TestHelper.serializeToJson(updateList)));
     }
 
-    @Test(description = "To verify adding item to the created list")
-    public void testAddItemsToList() {
+    @DataProvider
+    public Object[][] getItems() {
+        return new Object[][]{
+                {new Media(1668, "tv", null)},
+                {new Media(597, "movie", null)}
+        };
+    }
 
-        Items items = new Items();
-        items.setMedia(1668, MediaType.TV, null);
-        items.setMedia(597, MediaType.MOVIE, null);
+    @Test(dataProvider = "getItems",description = "To verify adding item to the created list")
+    public void testAddItemsToList(Media media) {
 
-        AddUpdateItemResponse addItemsResponse = listServer.addItemsToList(createdList.getId(), items);
+        var items = new Items();
+        items.setMedia(media.getMedia_id(), media.getMedia_type().strip(), media.getComment());
+
+        var addItemsResponse = listServer.addItemsToList(createdList.getId(), items);
         Assert.assertTrue(addItemsResponse.isSuccess(), "Failed to add items to the list");
 
         Assert.assertTrue(listServer.doesItemsExistsInList(createdList.getId(), items.getItems()),
@@ -101,18 +103,18 @@ public class ListTests extends BaseTest {
     @Test(description = "To verify updating items from the created list")
     public void testUpdateItemsFromList() {
 
-        Items items = new Items();
-        items.setMedia(1668, MediaType.TV, null);
-        items.setMedia(597, MediaType.MOVIE, null);
+        var items = new Items();
+        items.setMedia(1668, "tv", null);
+        items.setMedia(597, "movie", null);
 
-        AddUpdateItemResponse addItemsResponse = listServer.addItemsToList(createdList.getId(), items);
+        var addItemsResponse = listServer.addItemsToList(createdList.getId(), items);
         Assert.assertTrue(addItemsResponse.isSuccess(), "Failed to add items to the list");
         test.pass(String.format("Added items %s to the list successfully ", TestHelper.serializeToJson(items)));
 
-        Items itemsToBeUpdated = new Items();
-        itemsToBeUpdated.setMedia(1668, MediaType.TV, "great tv show");
+        var itemsToBeUpdated = new Items();
+        itemsToBeUpdated.setMedia(1668, "tv", "great tv show");
 
-        AddUpdateItemResponse updatedItemsResponse = listServer.updateItemsToList(createdList.getId(), itemsToBeUpdated);
+        var updatedItemsResponse = listServer.updateItemsToList(createdList.getId(), itemsToBeUpdated);
         Assert.assertTrue(updatedItemsResponse.isSuccess(), "Failed to update items to the list");
 
         Assert.assertTrue(listServer.doesItemsExistsInList(createdList.getId(), itemsToBeUpdated.getItems()),
@@ -123,18 +125,18 @@ public class ListTests extends BaseTest {
     @Test(description = "To verify items deletion from the created list")
     public void testDeleteItemsFromList() {
 
-        Items items = new Items();
-        items.setMedia(1668, MediaType.TV, null);
-        items.setMedia(597, MediaType.MOVIE, null);
+        var items = new Items();
+        items.setMedia(1668, "tv", null);
+        items.setMedia(597, "movie", null);
 
         AddUpdateItemResponse addItemsResponse = listServer.addItemsToList(createdList.getId(), items);
         Assert.assertTrue(addItemsResponse.isSuccess(), "Failed to add items to the list");
         test.pass(String.format("Added items %s to the list successfully ", TestHelper.serializeToJson(items)));
 
-        Items itemsToBeDeleted = new Items();
-        itemsToBeDeleted.setMedia(597, MediaType.MOVIE, null);
+        var itemsToBeDeleted = new Items();
+        itemsToBeDeleted.setMedia(597, "movie", null);
 
-        Response deletedItemsResponse = listServer.deleteItemFromList(createdList.getId(), itemsToBeDeleted);
+        var deletedItemsResponse = listServer.deleteItemFromList(createdList.getId(), itemsToBeDeleted);
         Assert.assertEquals(deletedItemsResponse.statusCode(), HttpStatus.SC_OK);
 
         Assert.assertFalse(listServer.doesItemsExistsInList(createdList.getId(), itemsToBeDeleted.getItems()),
@@ -145,17 +147,17 @@ public class ListTests extends BaseTest {
     @Test(description = "To verify clearing all the items from the list")
     public void testClearItemsFromList() {
 
-        Items items = new Items();
-        items.setMedia(1668, MediaType.TV, null);
-        items.setMedia(597, MediaType.MOVIE, null);
+        var items = new Items();
+        items.setMedia(1668, "tv", null);
+        items.setMedia(597, "movie", null);
 
-        AddUpdateItemResponse addItemsResponse = listServer.addItemsToList(createdList.getId(), items);
+        var addItemsResponse = listServer.addItemsToList(createdList.getId(), items);
         Assert.assertTrue(addItemsResponse.isSuccess(), "Failed to add items to the list");
         test.pass(String.format("Added items %s to the list successfully ", TestHelper.serializeToJson(items)));
 
         Assert.assertEquals(listServer.getListSize(createdList.getId()), 2);
 
-        Response clearListResponse = listServer.clearList(createdList.getId());
+        var clearListResponse = listServer.clearList(createdList.getId());
         Assert.assertEquals(clearListResponse.statusCode(), HttpStatus.SC_OK);
 
         Assert.assertFalse(listServer.doesItemsExistsInList(createdList.getId(), items.getItems()),
