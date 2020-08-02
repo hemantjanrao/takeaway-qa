@@ -1,11 +1,10 @@
 @list
 Feature: Movie API tests
 
-#  Background: A List
-#    Given list service is running
+  Background: A List
+    Given list service is running
 
   Scenario Outline: Create list with given name
-    Given list service is running
     When I create a list with '<Name>' name
     Then Should be with '<status>' result
 
@@ -16,7 +15,6 @@ Feature: Movie API tests
       | 123243  | pass   |
 
   Scenario Outline: Update the list name
-    Given list service is running
     When I create a list with '<Name>' name
     Then Should be with '<status>' result
     And I update list name to '<updated_name>'
