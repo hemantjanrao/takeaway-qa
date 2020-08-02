@@ -1,6 +1,5 @@
 package org.takeaway.test;
 
-import io.restassured.response.Response;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.http.HttpStatus;
 import org.takeaway.core.base.BaseTest;
@@ -13,7 +12,6 @@ import org.takeaway.server.entity.model.List;
 import org.takeaway.server.entity.model.Media;
 import org.takeaway.server.entity.model.UpdateList;
 import org.takeaway.server.entity.response.AddUpdateItemResponse;
-import org.takeaway.server.entity.response.GetListResponse;
 import org.takeaway.server.entity.response.ListResponse;
 import org.testng.Assert;
 import org.testng.annotations.*;
@@ -153,13 +151,13 @@ public class ListTests extends BaseTest {
         items.setMedia(1668, "tv", null);
         items.setMedia(597, "movie", null);
 
-        AddUpdateItemResponse addItemsResponse = listServer.addItemsToList(createdList.getId(), items);
+        var addItemsResponse = listServer.addItemsToList(createdList.getId(), items);
         Assert.assertTrue(addItemsResponse.isSuccess(), "Failed to add items to the list");
         test.pass(String.format("Added items %s to the list successfully ", TestHelper.serializeToJson(items)));
 
         Assert.assertEquals(listServer.getListSize(createdList.getId()), 2);
 
-        Response clearListResponse = listServer.clearList(createdList.getId());
+        var clearListResponse = listServer.clearList(createdList.getId());
         Assert.assertEquals(clearListResponse.statusCode(), HttpStatus.SC_OK);
 
         Assert.assertFalse(listServer.doesItemsExistsInList(createdList.getId(), items.getItems()),
