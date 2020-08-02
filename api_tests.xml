@@ -4,6 +4,7 @@
     <test name="List operations">
         <classes>
             <class name="org.takeaway.test.ListTests"/>
+            <class name="org.takeaway.cucumber.RunBDDTest"/>
         </classes>
     </test>
 </suite>
