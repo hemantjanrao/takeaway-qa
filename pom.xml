@@ -12,7 +12,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <rest-assured.version>4.3.1</rest-assured.version>
-        <groovy.version>3.0.3</groovy.version>
+        <groovy.version>3.0.7</groovy.version>
         <guava.version>28.0-jre</guava.version>
         <log4j.version>1.2.17</log4j.version>
         <json.version>20190722</json.version>
